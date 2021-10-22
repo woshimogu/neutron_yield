@@ -103,8 +103,8 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                       checkOverlaps);        //overlaps checking
 
  //Be Target
-  G4double BeTargetRadius = 2.25 * cm;
-  G4double BeTargetThick = 0.11 * cm;
+  G4double BeTargetRadius = 2.5 * cm;
+  G4double BeTargetThick = 0.13605 * cm;
   G4double startAngle = 0.*degree;
   G4double endAngle = 360.*degree;
     G4Tubs* solidBeTarget =
