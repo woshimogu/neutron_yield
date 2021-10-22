@@ -58,7 +58,7 @@ int main(int argc,char** argv)
   // Construct the default run manager
   //
   auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
-  runManager->SetNumberOfThreads(12);
+  runManager->SetNumberOfThreads(1);
   // Set mandatory initialization classes
   //
   // Detector construction

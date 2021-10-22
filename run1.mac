@@ -16,6 +16,8 @@
 # 
 # gamma 6 MeV to the direction (0.,0.,1.)
 #
+/det/range 0.2 cm
+/det/setTargetMaterial G4_Ta
 /gps/particle proton
 /gps/pos/type Plane
 /gps/pos/shape Circle
@@ -25,4 +27,4 @@
 /gps/direction 0 0 1
 /gps/ene/mono 13 MeV
 #
-/run/beamOn 10000000
+/run/beamOn 10000

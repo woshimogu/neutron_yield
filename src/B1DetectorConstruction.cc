@@ -28,7 +28,6 @@
 /// \brief Implementation of the B1DetectorConstruction class
 
 #include "B1DetectorConstruction.hh"
-
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4Box.hh"
@@ -44,12 +43,18 @@
 
 
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 B1DetectorConstruction::B1DetectorConstruction()
 : G4VUserDetectorConstruction(),
-  fScoringVolume(0)
-{ }
+  fScoringVolume(nullptr),
+  frange(0.13605 * cm),
+  fTargetMaterial(nullptr),
+  fLogicTarget(nullptr)
+{
+    fMessenger = new B1DetectorMessenger(this);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -68,7 +73,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   // Envelope parameters
   //
   G4double env_sizeXY = 40*cm, env_sizeZ = 40*cm;
-  G4Material* Be = nist->FindOrBuildMaterial("G4_Be");
+  fTargetMaterial = nist->FindOrBuildMaterial("G4_Be");
 
   // Option to switch on/off checking of volumes overlaps
   //
@@ -104,20 +109,19 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
  //Be Target
   G4double BeTargetRadius = 2.5 * cm;
-  G4double BeTargetThick = 0.13605 * cm;
   G4double startAngle = 0.*degree;
   G4double endAngle = 360.*degree;
     G4Tubs* solidBeTarget =
-          new G4Tubs("Be_Layer", 0,BeTargetRadius,BeTargetThick/2., startAngle,endAngle);
+          new G4Tubs("Be_Layer", 0,BeTargetRadius,frange/2., startAngle,endAngle);
 
-    G4LogicalVolume* logicBeTarget =
+    fLogicTarget =
             new G4LogicalVolume(solidBeTarget,           //its solid
-                                Be,                      //its material
+                                fTargetMaterial,                      //its material
                                 "Be_Layer");       //its name;
 
     new G4PVPlacement(0,                     //no rotation
-                      G4ThreeVector(0,0,BeTargetThick/2.),       //at (0,0,0)
-                      logicBeTarget,            //its logical volume
+                      G4ThreeVector(0,0,frange/2.),       //at (0,0,0)
+                      fLogicTarget,            //its logical volume
                       "Be_Layer",               //its name
                       logicWorld,                     //its mother  volume
                       false,                 //no boolean operation
@@ -126,12 +130,35 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
 
     // Step limits only approach to charged particles!
-    G4double max_step =  6.5*um;
+    //G4double max_step =  frange / 50.;
+    /*G4double max_step =  6.5*um;
     G4UserLimits *step_limit_target = new G4UserLimits();
     step_limit_target->SetMaxAllowedStep(max_step);
-    logicBeTarget->SetUserLimits(step_limit_target);
+    fLogicTarget->SetUserLimits(step_limit_target);*/
 
     return physWorld;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void B1DetectorConstruction::SetTargetMaterial(G4String materialName)
+{
+    G4NistManager* nistManager = G4NistManager::Instance();
+
+    G4Material* pttoMaterial =
+            nistManager->FindOrBuildMaterial(materialName);
+
+    if (fTargetMaterial != pttoMaterial) {
+        if ( pttoMaterial ) {
+            fTargetMaterial = pttoMaterial;
+            if (fLogicTarget) fLogicTarget->SetMaterial(fTargetMaterial);
+            G4cout
+                    << G4endl
+                    << "----> The target is made of " << materialName << G4endl;
+        } else {
+            G4cout
+                    << G4endl
+                    << "-->  WARNING from SetTargetMaterial : "
+                    << materialName << " not found" << G4endl;
+        }
+    }
+}

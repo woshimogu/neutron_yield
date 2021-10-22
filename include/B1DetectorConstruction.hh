@@ -32,6 +32,8 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "B1DetectorMessenger.hh"
+#include "G4Material.hh"
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
@@ -48,8 +50,19 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
     
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
+    void SetRange(G4double range) {frange = range;}
+    G4double GetRange() const {return frange;}
+
+    void SetTargetMaterial(G4String materialName);
+
+    const G4String GetTargetMaterialName() const {return fTargetMaterial->GetName();}
+
   protected:
     G4LogicalVolume*  fScoringVolume;
+    G4LogicalVolume*   fLogicTarget;     // pointer to the logical Target
+    G4double frange;
+    G4Material*        fTargetMaterial;  // pointer to the target  material
+    B1DetectorMessenger*  fMessenger;   // messenger
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

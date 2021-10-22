@@ -92,19 +92,28 @@ B1RunAction::~B1RunAction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1RunAction::BeginOfRunAction(const G4Run*)
-{
-  // inform the runManager to save random number seed
-  G4RunManager::GetRunManager()->SetRandomNumberStore(false);
+void B1RunAction::BeginOfRunAction(const G4Run*) {
+    // inform the runManager to save random number seed
+    G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
-  if(!fAnalysisManager) { BookHisto(); }
-  // reset accumulables to their initial values
-  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
-  accumulableManager->Reset();
+    if (!fAnalysisManager) { BookHisto(); }
+    // reset accumulables to their initial values
+    G4AccumulableManager *accumulableManager = G4AccumulableManager::Instance();
+    accumulableManager->Reset();
+    /*const B1PrimaryGeneratorAction *generatorAction
+            = static_cast<const B1PrimaryGeneratorAction *>
+            (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());*/
+    //if (generatorAction) {
+     //   G4double energy = generatorAction->GetParticleGun()->GetParticleEnergy();
+    //    G4String filename;
+    //    filename += "pBe" ;
+     //   filename += G4BestUnit(energy,"Energy");
+     //   filename += ".o";
+        if (fAnalysisManager->IsActive()) {
+            fAnalysisManager->OpenFile("pBe");
+        }
+    //}
 
-    if (fAnalysisManager->IsActive()) {
-        fAnalysisManager->OpenFile("pNsource");
-    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -156,14 +165,22 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     G4double particleEnergy = particleGun->GetParticleEnergy();
     runCondition += G4BestUnit(particleEnergy,"Energy");
   }
-        
+
+
+
   // Print
   //  
   if (IsMaster()) {
-
     G4cout
      << G4endl
      << "--------------------End of Global Run-----------------------";
+      const B1DetectorConstruction* det
+              = static_cast<const B1DetectorConstruction*>
+              (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+      if(det){
+          G4cout << G4endl
+          << " The Thick of " << det->GetTargetMaterialName() <<" Target is " << G4BestUnit(det->GetRange(),"Length");
+      }
   }
   else {
     G4cout
@@ -260,10 +277,9 @@ void B1RunAction::BookHisto()
               "Stopping power curve",                            //4
               "Primary proton energy depth profile"              //5
             };
-
     // Default values (to be reset via /analysis/h1/set command)
     const G4int nbins = 200;
-    const G4double vmin[] = {6., 0., 10, 1., 0., 0.};
+    const G4double vmin[] = {0., 0., 0., 0., 0., 0.};
     const G4double vmax[] = {13., 7., 13., 1.3, 1.3, 1.3};
 
     // Create all histograms as inactivated
