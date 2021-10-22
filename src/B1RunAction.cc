@@ -100,20 +100,9 @@ void B1RunAction::BeginOfRunAction(const G4Run*) {
     // reset accumulables to their initial values
     G4AccumulableManager *accumulableManager = G4AccumulableManager::Instance();
     accumulableManager->Reset();
-    /*const B1PrimaryGeneratorAction *generatorAction
-            = static_cast<const B1PrimaryGeneratorAction *>
-            (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());*/
-    //if (generatorAction) {
-     //   G4double energy = generatorAction->GetParticleGun()->GetParticleEnergy();
-    //    G4String filename;
-    //    filename += "pBe" ;
-     //   filename += G4BestUnit(energy,"Energy");
-     //   filename += ".o";
-        if (fAnalysisManager->IsActive()) {
-            fAnalysisManager->OpenFile("pBe");
-        }
-    //}
-
+    if (fAnalysisManager->IsActive()) {
+        fAnalysisManager->OpenFile("pNyield");
+    }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
