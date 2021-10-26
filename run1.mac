@@ -16,6 +16,7 @@
 # 
 # gamma 6 MeV to the direction (0.,0.,1.)
 #
+/analysis/setFileName run01
 /det/range 0.2 cm
 /det/setTargetMaterial G4_Ta
 /gps/particle proton

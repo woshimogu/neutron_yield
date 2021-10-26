@@ -82,7 +82,7 @@ B1RunAction::B1RunAction()
   accumulableManager->RegisterAccumulable(fHelium3);
   accumulableManager->RegisterAccumulable(fAlpha);
   //G4AnalysisManager
-  //BookHisto();
+  BookHisto();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -96,12 +96,12 @@ void B1RunAction::BeginOfRunAction(const G4Run*) {
     // inform the runManager to save random number seed
     G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
-    if (!fAnalysisManager) { BookHisto(); }
+    //if (!fAnalysisManager) { BookHisto(); }
     // reset accumulables to their initial values
     G4AccumulableManager *accumulableManager = G4AccumulableManager::Instance();
     accumulableManager->Reset();
     if (fAnalysisManager->IsActive()) {
-        fAnalysisManager->OpenFile("pNyield");
+        fAnalysisManager->OpenFile();
     }
 }
 
@@ -158,7 +158,7 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
 
   // Print
-  //  
+  //
   if (IsMaster()) {
     G4cout
      << G4endl
