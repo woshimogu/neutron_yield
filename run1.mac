@@ -8,17 +8,18 @@
 #
 # Initialize kernel
 /run/initialize
+/control/cout/ignoreThreadsExcept 0
 #
 /control/verbose 2
-/run/verbose 2
-/event/verbose 0
-#/tracking/verbose 2
-# 
-# gamma 6 MeV to the direction (0.,0.,1.)
+/run/verbose 1
 #
-/analysis/setFileName run01
-/det/range 0.2 cm
-/det/setTargetMaterial G4_Ta
+/det/setTargetMaterial  G4_Ta
+/det/range 0.04 cm
+/analysis/setFileName pTa13MeV
+/analysis/h1/set 0 200 0. 15. MeV #Edep(MeV) in first Layer
+/analysis/h1/set 1 200 0. 15. MeV #Edep(MeV) in V Layer
+/analysis/h1/set 2 200 0. 15. MeV #Edep(MeV) in the target
+/analysis/h1/set 3 200 0. 1.4 mm  #projectile range
 /gps/particle proton
 /gps/pos/type Plane
 /gps/pos/shape Circle
@@ -27,5 +28,9 @@
 /gps/ang/type planar
 /gps/direction 0 0 1
 /gps/ene/mono 13 MeV
-#
+/run/beamOn 10000
+
+/det/setTargetMaterial  G4_Fe
+/det/range 0.04 cm
+/analysis/setFileName pFe13MeV
 /run/beamOn 10000

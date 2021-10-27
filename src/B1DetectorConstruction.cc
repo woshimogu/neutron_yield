@@ -41,6 +41,11 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UserLimits.hh"
 
+#include "G4GeometryManager.hh"
+#include "G4PhysicalVolumeStore.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4SolidStore.hh"
+
 
 
 
@@ -49,7 +54,7 @@
 B1DetectorConstruction::B1DetectorConstruction()
 : G4VUserDetectorConstruction(),
   fScoringVolume(nullptr),
-  frange(0.13605 * cm),
+  frange(0.1* mm),
   fTargetMaterial(nullptr),
   fLogicTarget(nullptr)
 {
@@ -64,7 +69,12 @@ B1DetectorConstruction::~B1DetectorConstruction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4VPhysicalVolume* B1DetectorConstruction::Construct()
-{  
+{
+    G4GeometryManager::GetInstance()->OpenGeometry();
+    G4PhysicalVolumeStore::GetInstance()->Clean();
+    G4LogicalVolumeStore::GetInstance()->Clean();
+    G4SolidStore::GetInstance()->Clean();
+
   // Get nist material manager
   G4NistManager* nist = G4NistManager::Instance();
 
@@ -130,8 +140,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
 
     // Step limits only approach to charged particles!
-    //G4double max_step =  frange / 50.;
-    /*G4double max_step =  6.5*um;
+    /*G4double max_step =  frange / 200.;
     G4UserLimits *step_limit_target = new G4UserLimits();
     step_limit_target->SetMaxAllowedStep(max_step);
     fLogicTarget->SetUserLimits(step_limit_target);*/
@@ -139,9 +148,18 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     return physWorld;
 }
 
+
+void B1DetectorConstruction::SetRange(G4double range)
+{
+    frange = range;
+    G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+    //G4RunManager::GetRunManager()->ReinitializeGeometry();
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void B1DetectorConstruction::SetTargetMaterial(G4String materialName)
 {
+    G4String a = materialName;
     G4NistManager* nistManager = G4NistManager::Instance();
 
     G4Material* pttoMaterial =
@@ -150,11 +168,18 @@ void B1DetectorConstruction::SetTargetMaterial(G4String materialName)
     if (fTargetMaterial != pttoMaterial) {
         if ( pttoMaterial ) {
             fTargetMaterial = pttoMaterial;
-            if (fLogicTarget) fLogicTarget->SetMaterial(fTargetMaterial);
+            if (fLogicTarget) {
+                fLogicTarget->SetMaterial(fTargetMaterial);
+                G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+            }
             G4cout
                     << G4endl
                     << "----> The target is made of " << materialName << G4endl;
-        } else {
+            G4cout        << G4endl
+                    << fLogicTarget->GetMaterial()->GetName() << G4endl;
+
+        }
+        else {
             G4cout
                     << G4endl
                     << "-->  WARNING from SetTargetMaterial : "

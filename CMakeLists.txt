@@ -47,6 +47,7 @@ set(EXAMPLEB1_SCRIPTS
   init_vis.mac
   run1.mac
   vis.mac
+        run2.mac
         plotHisto.C
   )
 

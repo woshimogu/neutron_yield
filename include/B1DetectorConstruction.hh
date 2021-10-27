@@ -50,7 +50,7 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
     
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
-    void SetRange(G4double range) {frange = range;}
+    void SetRange(G4double range);
     G4double GetRange() const {return frange;}
 
     void SetTargetMaterial(G4String materialName);

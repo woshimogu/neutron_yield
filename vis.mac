@@ -80,10 +80,6 @@
 /vis/geometry/set/visibility World 0 false
 # "Envelope" is transparent blue to represent water
 /vis/geometry/set/colour Be_Layer 0 0 0 1 1
-/vis/geometry/set/colour V_Layer 0 0 1 0 .8
-/vis/geometry/set/colour Ag_CuLayer 0 1 1 0 .5
-/vis/geometry/set/colour Cu_Layer1 0 1 0 0 .2
-/vis/geometry/set/colour Cu_Layer2 0 1 0 0 .2
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
 #/vis/viewer/set/viewpointThetaPhi 120 150
@@ -94,6 +90,9 @@
 #
 # For file-based drivers, use this to create an empty detector view:
 #/vis/viewer/flush
+/det/setTargetMaterial  G4_Ta
+/det/range 2 cm
+/vis/geometry/set/visibility World 0 false
 /gps/particle proton
 /gps/pos/type Plane
 /gps/pos/shape Circle

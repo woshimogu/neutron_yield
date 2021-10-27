@@ -88,7 +88,9 @@ B1RunAction::B1RunAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 B1RunAction::~B1RunAction()
-{}
+{
+    delete fAnalysisManager;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -96,12 +98,12 @@ void B1RunAction::BeginOfRunAction(const G4Run*) {
     // inform the runManager to save random number seed
     G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
-    //if (!fAnalysisManager) { BookHisto(); }
+    if (!fAnalysisManager) { BookHisto(); }
     // reset accumulables to their initial values
     G4AccumulableManager *accumulableManager = G4AccumulableManager::Instance();
     accumulableManager->Reset();
     if (fAnalysisManager->IsActive()) {
-        fAnalysisManager->OpenFile();
+        fAnalysisManager->OpenFile("pN");
     }
 }
 
@@ -220,8 +222,6 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
         fAnalysisManager->CloseFile();
 
         G4cout << "\n----> Histograms and ntuples are saved\n" << G4endl;
-        delete fAnalysisManager;
-        fAnalysisManager = 0;
     }
 
 }

@@ -62,8 +62,9 @@ B1DetectorMessenger::B1DetectorMessenger(B1DetectorConstruction* Det)
     fRangeCmd = new G4UIcmdWithADoubleAndUnit("/det/range",this);
     fRangeCmd->SetGuidance("Define a target thick");
     fRangeCmd->SetParameterName("Range",false);
+    fRangeCmd->SetRange("Range>0.");
     fRangeCmd->SetUnitCategory("Length");
-    fRangeCmd->AvailableForStates(G4State_Idle);
+    fRangeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
 }
 
