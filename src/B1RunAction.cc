@@ -103,7 +103,7 @@ void B1RunAction::BeginOfRunAction(const G4Run*) {
     G4AccumulableManager *accumulableManager = G4AccumulableManager::Instance();
     accumulableManager->Reset();
     if (fAnalysisManager->IsActive()) {
-        fAnalysisManager->OpenFile("pN");
+        fAnalysisManager->OpenFile();
     }
 }
 

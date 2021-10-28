@@ -90,9 +90,8 @@
 #
 # For file-based drivers, use this to create an empty detector view:
 #/vis/viewer/flush
-/det/setTargetMaterial  G4_Ta
 /det/range 2 cm
-/vis/geometry/set/visibility World 0 false
+/det/setTargetMaterial  G4_Ta
 /gps/particle proton
 /gps/pos/type Plane
 /gps/pos/shape Circle

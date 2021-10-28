@@ -7,19 +7,21 @@
 #/run/numberOfThreads 4
 #
 # Initialize kernel
+
 /run/initialize
 /control/cout/ignoreThreadsExcept 0
 #
 /control/verbose 2
 /run/verbose 1
 #
+/det/range 0.5 mm
 /det/setTargetMaterial  G4_Ta
-/det/range 0.04 cm
 /analysis/setFileName pTa13MeV
 /analysis/h1/set 0 200 0. 15. MeV #Edep(MeV) in first Layer
 /analysis/h1/set 1 200 0. 15. MeV #Edep(MeV) in V Layer
 /analysis/h1/set 2 200 0. 15. MeV #Edep(MeV) in the target
-/analysis/h1/set 3 200 0. 1.4 mm  #projectile range
+/analysis/h1/set 3 200 0. 0.5 mm  #projectile range
+/analysis/h1/set 4 200 0. 0.5 mm  #
 /gps/particle proton
 /gps/pos/type Plane
 /gps/pos/shape Circle
@@ -30,7 +32,12 @@
 /gps/ene/mono 13 MeV
 /run/beamOn 10000
 
-/det/setTargetMaterial  G4_Fe
-/det/range 0.04 cm
-/analysis/setFileName pFe13MeV
+/det/setTargetMaterial  G4_Be
+/det/range 1.5 cm
+/analysis/setFileName pBe13MeV
+/analysis/h1/set 0 200 0. 15. MeV #Edep(MeV) in first Layer
+/analysis/h1/set 1 200 0. 15. MeV #Edep(MeV) in V Layer
+/analysis/h1/set 2 200 0. 15. MeV #Edep(MeV) in the target
+/analysis/h1/set 3 200 0. 1.5 mm  #projectile range
+/analysis/h1/set 4 200 0. 1.5 mm  #
 /run/beamOn 10000

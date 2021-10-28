@@ -55,9 +55,10 @@ B1DetectorConstruction::B1DetectorConstruction()
 : G4VUserDetectorConstruction(),
   fScoringVolume(nullptr),
   frange(0.1* mm),
-  fTargetMaterial(nullptr),
   fLogicTarget(nullptr)
 {
+    G4NistManager* nist = G4NistManager::Instance();
+    fTargetMaterial = nist->FindOrBuildMaterial("G4_Be");
     fMessenger = new B1DetectorMessenger(this);
 }
 
@@ -83,7 +84,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   // Envelope parameters
   //
   G4double env_sizeXY = 40*cm, env_sizeZ = 40*cm;
-  fTargetMaterial = nist->FindOrBuildMaterial("G4_Be");
+
 
   // Option to switch on/off checking of volumes overlaps
   //
@@ -128,7 +129,8 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
             new G4LogicalVolume(solidBeTarget,           //its solid
                                 fTargetMaterial,                      //its material
                                 "Be_Layer");       //its name;
-
+    G4cout        << G4endl
+                  <<  "za hui shi" << fLogicTarget->GetMaterial()->GetName() << G4endl;
     new G4PVPlacement(0,                     //no rotation
                       G4ThreeVector(0,0,frange/2.),       //at (0,0,0)
                       fLogicTarget,            //its logical volume
@@ -140,10 +142,12 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
 
     // Step limits only approach to charged particles!
-    /*G4double max_step =  frange / 200.;
+    G4double max_step =  frange / 2000.;
+    G4cout << "frange " << frange / CLHEP::mm << G4endl;
+    G4cout << " step in run " << max_step / CLHEP::mm << G4endl;
     G4UserLimits *step_limit_target = new G4UserLimits();
     step_limit_target->SetMaxAllowedStep(max_step);
-    fLogicTarget->SetUserLimits(step_limit_target);*/
+    fLogicTarget->SetUserLimits(step_limit_target);
 
     return physWorld;
 }
@@ -152,8 +156,8 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 void B1DetectorConstruction::SetRange(G4double range)
 {
     frange = range;
-    G4RunManager::GetRunManager()->PhysicsHasBeenModified();
-    //G4RunManager::GetRunManager()->ReinitializeGeometry();
+    //G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -175,9 +179,6 @@ void B1DetectorConstruction::SetTargetMaterial(G4String materialName)
             G4cout
                     << G4endl
                     << "----> The target is made of " << materialName << G4endl;
-            G4cout        << G4endl
-                    << fLogicTarget->GetMaterial()->GetName() << G4endl;
-
         }
         else {
             G4cout
